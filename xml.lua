@@ -5,7 +5,11 @@ module(..., package.seeall)
 --
 -- xml.lua - XML parser for use with the Corona SDK.
 --
--- version: 1.0
+-- version: 1.1
+--
+-- CHANGELOG:
+--
+-- 1.1 - Fixed base directory issue with the loadFile() function.
 --
 -- NOTE: This is a modified version of Alexander Makeev's Lua-only XML parser
 -- found here: http://lua-users.org/wiki/LuaXml
@@ -96,7 +100,11 @@ function newParser()
 	end
 	
 	function XmlParser:loadFile(xmlFilename, base)
-		local path = system.pathForFile( xmlFilename, system.ResourcesDirectory )
+		if not base then
+			base = system.ResourceDirectory
+		end
+			
+		local path = system.pathForFile( xmlFilename, base )
 		local hFile, err = io.open(path,"r");
 		
 		if hFile and not err then
